@@ -156,7 +156,8 @@ int Playlist::addSong(string title, string artist,
 
         current->next = newNode;
     }
-
+    
+    redoStack.clear();  
     saveSongs();
 
     return s.id;

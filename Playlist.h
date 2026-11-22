@@ -1,49 +1,54 @@
 #pragma once
 
-#include "Song.h"
-#include <nlohmann/json.hpp>
-
 #include <string>
-#include <utility>
 #include <vector>
+#include <utility>
+
+#include "Song.h"
+#include "nlohmann/json.hpp"
+
+using namespace std;
+using json = nlohmann::json;
 
 class Playlist {
+
 private:
-    struct HistoryEntry {
-        Song song;
-        int position;
-    };
-
-    struct Node {
-        Song song;
-        Node* next;
-
-        explicit Node(const Song& value) : song(value), next(nullptr) {}
-    };
 
     Node* head;
     int nextId;
-    std::vector<HistoryEntry> undoStack;
-    std::vector<HistoryEntry> redoStack;
 
-    std::string normalize(std::string text) const;
+    vector<pair<Song, int>> undoStack;
+    vector<pair<Song, int>> redoStack;
+
+    string normalize(string text) const;
+
+    string getSongsFilePath() const;
+
     void saveSongs() const;
+
     void loadSongs();
 
+
 public:
-    using json = nlohmann::json;
 
     Playlist();
+
     ~Playlist();
 
-    Playlist(const Playlist&) = delete;
-    Playlist& operator=(const Playlist&) = delete;
+    string classifyMood(string title, string artist) const;
 
-    bool isDuplicate(const std::string& title, const std::string& artist) const;
-    int addSong(std::string title, std::string artist,
-                std::string mood, int duration);
+    void reclassifyExistingSongs();
+
+    bool isDuplicate(string title, string artist) const;
+
+    int addSong(string title, string artist,
+                string mood, int duration);
+
     bool deleteSong(int id);
+
     bool undoDelete();
+
     bool redoDelete();
+
     json getSongs() const;
 };

@@ -5,7 +5,7 @@
 #include <utility>
 
 #include "Song.h"
-#include "nlohmann/json.hpp"
+#include "../nlohmann/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
